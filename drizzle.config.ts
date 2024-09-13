@@ -11,5 +11,5 @@ export default defineConfig({
   dbCredentials: {
     url: z.string().parse(process.env.DATABASE_URL),
   },
-  tablesFilter: ['r3-antho-app_']
+  tablesFilter: [""],
 });
