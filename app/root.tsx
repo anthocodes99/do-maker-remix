@@ -1,4 +1,5 @@
 import {
+  Link,
   Links,
   Meta,
   Outlet,
@@ -6,6 +7,17 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import "./tailwind.css";
+import Navbar from "./components/Navbar";
+
+export const handle = {
+  breadcrumb: () => (
+    <>
+      <Link to="/">
+        <h3 className="text-2xl font-bold">Delivery Order Maker</h3>
+      </Link>
+    </>
+  ),
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +29,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <Navbar />
         {children}
         <ScrollRestoration />
         <Scripts />
