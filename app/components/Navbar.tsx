@@ -1,9 +1,10 @@
 import React from "react";
 import { useMatches } from "@remix-run/react";
 
+// TODO: use shadcn Breadcrumb
+// https://ui.shadcn.com/docs/components/breadcrumb
 export default function Navbar() {
   const matches = useMatches();
-  console.log({ matches });
   return (
     <div className="flex justify-between px-8 py-10 border border-b border-gray-400">
       <ul className="flex gap-4">

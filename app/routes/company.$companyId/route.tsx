@@ -2,12 +2,9 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import { db } from "~/.server/db";
 import { companies } from "~/.server/db/schema/companies";
-import {
-  deliveryOrders,
-  deliveryOrderItems,
-} from "~/.server/db/schema/delivery-orders";
+import { deliveryOrders } from "~/.server/db/schema/delivery-orders";
 
-import { DeliveryOrder, columns } from "../delivery-order._index/columns";
+import { columns } from "../delivery-order._index/columns";
 import { DataTable } from "../delivery-order._index/data-table";
 import { users } from "~/.server/db/schema/users";
 import { LoaderFunctionArgs } from "@remix-run/node";

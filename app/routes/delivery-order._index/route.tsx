@@ -1,13 +1,10 @@
-import { json, Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import { db } from "~/.server/db";
 import { companies } from "~/.server/db/schema/companies";
-import {
-  deliveryOrders,
-  deliveryOrderItems,
-} from "~/.server/db/schema/delivery-orders";
+import { deliveryOrders } from "~/.server/db/schema/delivery-orders";
 
-import { DeliveryOrder, columns } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { users } from "~/.server/db/schema/users";
 
