@@ -22,8 +22,12 @@ export const companies = pgTable(
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 64 }).unique().notNull(),
     fullName: varchar("full_name", { length: 256 }).unique().notNull(),
-    addressLineOne: varchar("address_line_one", { length: 64 }).notNull(),
-    addressLineTwo: varchar("address_line_two", { length: 64 }).notNull(),
+    addressLineOne: varchar("address_line_one", { length: 64 }),
+    addressLineTwo: varchar("address_line_two", { length: 64 }),
+    telephoneNumber: varchar("telephone_number", { length: 32 }),
+    taxCode: varchar("tax_code", { length: 32 }),
+    taxNumber: varchar("tax_number", { length: 32 }),
+    contactPerson: varchar("contact_person", { length: 32 }),
     createdAt: timestamp("created_at")
       .notNull()
       .default(sql`CURRENT_TIMESTAMP`),

@@ -22,7 +22,9 @@ import { companies } from "./companies";
 export const deliveryOrders = pgTable("delivery_orders", {
   id: serial("id").primaryKey(),
   date: date("date").notNull(),
-  companyId: integer("company_id").references(() => companies.id),
+  companyId: integer("company_id")
+    .references(() => companies.id)
+    .notNull(),
   isPosted: boolean("is_posted").default(false),
   postedAt: timestamp("posted_at"),
   postedBy: integer("created_by").references(() => users.id),
@@ -34,9 +36,9 @@ export const deliveryOrders = pgTable("delivery_orders", {
 
 export const deliveryOrderItems = pgTable("delivery_order_items", {
   id: serial("id").primaryKey(),
-  deliveryOrderId: integer("delivery_order_id").references(
-    () => deliveryOrders.id
-  ),
+  deliveryOrderId: integer("delivery_order_id")
+    .references(() => deliveryOrders.id)
+    .notNull(),
   name: varchar("name", { length: 128 }).notNull(),
   quantity: decimal("quantity").notNull(),
   uom: varchar("uom").notNull(), //unit of measurement
