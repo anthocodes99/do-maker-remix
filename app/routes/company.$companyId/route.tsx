@@ -34,7 +34,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       createdAt: deliveryOrders.createdAt,
     })
     .from(deliveryOrders)
-    .where(eq(deliveryOrders.companyId, params.companyId))
+    .where(eq(deliveryOrders.companyId, Number(params.companyId)))
     .leftJoin(companies, eq(deliveryOrders.companyId, companies.id))
     .leftJoin(users, eq(users.id, deliveryOrders.createdBy));
   return {
