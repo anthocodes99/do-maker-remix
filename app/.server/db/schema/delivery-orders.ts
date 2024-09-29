@@ -44,6 +44,7 @@ export const deliveryOrderItems = pgTable("delivery_order_items", {
   uom: varchar("uom").notNull(), //unit of measurement
   // delivery order does not need unit price
   // unitPrice: decimal("unitPrice").notNull(),
+  description: varchar("description", { length: 128 }),
   createdAt: timestamp("created_at", { withTimezone: true }).default(
     sql`CURRENT_TIMESTAMP`
   ),
