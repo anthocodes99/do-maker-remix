@@ -34,6 +34,8 @@ export const deliveryOrders = pgTable("delivery_orders", {
   createdBy: integer("created_by").references(() => users.id),
 });
 
+// NOTE: update `$doId_.edit`'s `action()` function whenever changes are
+//       made here for edit to work
 export const deliveryOrderItems = pgTable("delivery_order_items", {
   id: serial("id").primaryKey(),
   deliveryOrderId: integer("delivery_order_id")
@@ -45,6 +47,7 @@ export const deliveryOrderItems = pgTable("delivery_order_items", {
   // delivery order does not need unit price
   // unitPrice: decimal("unitPrice").notNull(),
   description: varchar("description", { length: 128 }),
+  position: integer("position").unique().notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).default(
     sql`CURRENT_TIMESTAMP`
   ),
