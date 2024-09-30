@@ -1,8 +1,14 @@
-import { CheckIcon } from "@radix-ui/react-icons";
+import { CheckIcon, Cross1Icon, Cross2Icon } from "@radix-ui/react-icons";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, Link, useLoaderData, useParams } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  redirect,
+  useLoaderData,
+  useNavigate,
+  useParams,
+} from "@remix-run/react";
 import { eq } from "drizzle-orm";
-import React from "react";
 import invariant from "tiny-invariant";
 import { db } from "~/.server/db";
 import { companies } from "~/.server/db/schema/companies";
@@ -12,7 +18,6 @@ import {
   deliveryOrders,
 } from "~/.server/db/schema/delivery-orders";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import EditItems from "./EditItems";
 import { setAllValues } from "~/.server/utils/setAllValues";
 import EditHeaders from "./EditHeaders";
@@ -77,11 +82,11 @@ export async function action({ params, request }: ActionFunctionArgs) {
   type Items = LoaderData["items"];
 
   const formData = await request.formData();
-  console.log(formData); // FormData {junks:value}
+  // console.log(formData); // FormData {junks:value}
 
   // How did you get here?
   invariant(params.doId, "Missing Parameter doId");
-  console.log(params); // doId: 1
+  // console.log(params); // doId: 1
 
   // ==== handling headers ====
 
@@ -93,6 +98,30 @@ export async function action({ params, request }: ActionFunctionArgs) {
   console.log(items);
 
   const updItems = [];
+
+  // how to delete items?
+  // we need to know that the item doesn't exist anymore
+  // so we need to fetch data first
+  const dbItems = await db()
+    .select()
+    .from(deliveryOrderItems)
+    .where(eq(deliveryOrderItems.deliveryOrderId, Number(params.doId)));
+
+  // then we compare
+  // compare to prepare for delete
+  for (const dbItem of dbItems) {
+    const compareResult = items.find((item) => item.id === dbItem.id);
+    // if does not exist
+    if (!compareResult) {
+      // delete from db
+      // TODO: refactor to use bulk edits or transactions
+      const returns = await db()
+        .delete(deliveryOrderItems)
+        .where(eq(deliveryOrderItems.id, dbItem.id))
+        .returning({ deletedId: deliveryOrderItems.id });
+      console.log(`deliveryOrderItems deleted: `, returns);
+    }
+  }
 
   for (const item of items) {
     // check deliveryOrderId tampering
@@ -110,15 +139,19 @@ export async function action({ params, request }: ActionFunctionArgs) {
     // createdBy to current auth'd user, and not allowing
     // upserts to createdAt
     const updItem = {
-      id: item.id,
       name: item.name,
       // FIXME: update when auth backend is done
-      createdBy: item.createdBy ?? 1,
+      createdBy: item.createdBy === null ? 1 : item.createdBy,
       deliveryOrderId: item.deliveryOrderId,
       quantity: item.quantity,
       uom: item.uom,
       description: item.description,
+      position: item.position,
     };
+    if (item.id !== null) {
+      // FIXME: refactor to fix ts error
+      updItem.id = item.id;
+    }
 
     updItems.push(updItem);
   }
@@ -135,21 +168,32 @@ export async function action({ params, request }: ActionFunctionArgs) {
     .returning({ insertedId: deliveryOrderItems.id });
   console.log("items ok!", returns);
 
-  throw new Response("I suck", { status: 501 });
+  return redirect(`/delivery-order/${params.doId}`);
+  // throw new Response("I suck", { status: 501 });
 }
 
 export default function DeliveryOrderDetail() {
   const data = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
   return (
     <>
       <div className="max-w-4xl mx-auto">
         <Form method="post">
           <div className="mt-24">
-            <div className="flex justify-end">
+            <div className="flex gap-2 justify-end">
               {/* BUTTONS SECTION */}
               <Button variant="success" type="submit">
                 <div className="flex items-center">
                   <CheckIcon /> <span className="pl-4 font-bold">Post</span>
+                </div>
+              </Button>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => navigate(-1)}
+              >
+                <div className="flex items-center">
+                  <Cross1Icon /> <span className="pl-4 font-bold">Cancel</span>
                 </div>
               </Button>
             </div>
@@ -162,7 +206,6 @@ export default function DeliveryOrderDetail() {
                   <p>{data.company.addressLineTwo}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 min-w-24 mt-2">
               <EditHeaders data={data} />
             </div>
             <h2 className="text-xl mt-4">Items</h2>
