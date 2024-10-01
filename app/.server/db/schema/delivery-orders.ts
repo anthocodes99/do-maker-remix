@@ -56,9 +56,9 @@ export const deliveryOrderItems = pgTable("delivery_order_items", {
 
 export const deliveryOrderHeaders = pgTable("delivery_order_headers", {
   id: serial("id").primaryKey(),
-  deliveryOrderId: integer("delivery_order_id").references(
-    () => deliveryOrders.id
-  ),
+  deliveryOrderId: integer("delivery_order_id")
+    .references(() => deliveryOrders.id)
+    .notNull(),
   header: varchar("header", { length: 32 }).notNull(),
   value: varchar("value", { length: 32 }).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).default(
