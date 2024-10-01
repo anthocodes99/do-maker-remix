@@ -78,24 +78,88 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export async function action({ params, request }: ActionFunctionArgs) {
   type LoaderData = Awaited<ReturnType<typeof loader>>;
-  // FIXME: id can be null in this case
   type Items = LoaderData["items"];
+  type Headers = LoaderData["headers"];
+  // FIXME: id can be null in this case
 
   const formData = await request.formData();
-  // console.log(formData); // FormData {junks:value}
+  console.log(formData); // FormData {junks:value}
 
   // How did you get here?
   invariant(params.doId, "Missing Parameter doId");
   // console.log(params); // doId: 1
 
   // ==== handling headers ====
+  invariant(formData.get("headers"), "Missing headers.");
+
+  const headers: Headers = JSON.parse(formData.get("headers") as string);
+
+  const dbHeaders = await db()
+    .select()
+    .from(deliveryOrderHeaders)
+    .where(eq(deliveryOrderHeaders.id, Number(params.doId)));
+
+  for (const dbHeader of dbHeaders) {
+    const compareResult = headers.find((header) => header.id === dbHeader.id);
+    // if does not exist
+    if (!compareResult) {
+      // delete from db
+      // TODO: refactor to use bulk edits or transactions
+      const returns = await db()
+        .delete(deliveryOrderHeaders)
+        .where(eq(deliveryOrderHeaders.id, dbHeader.id))
+        .returning({ deletedId: deliveryOrderHeaders.id });
+      console.log(`deliveryOrderHeaders deleted: `, returns);
+    }
+  }
+
+  const updHeaders: Headers = [];
+
+  for (const header of headers) {
+    // check deliveryOrderId tampering
+    if (header.deliveryOrderId !== Number(params.doId))
+      throw new Response("Invalid doId.", { status: 403 });
+
+    // check createdBy tampering
+    // FIXME: update when auth backend is done
+    if (header.createdBy !== 1)
+      throw new Response("Invalid user.", { status: 403 });
+
+    // FIXME: better vodoo magic casting ability
+    const updHeader = {
+      createdBy: 1,
+      // createdAt: , // no need to touch this
+      deliveryOrderId: Number(params.doId), // prevent tampering
+      header: header.header,
+      value: header.value,
+    };
+
+    if (header.id !== null) {
+      updHeader.id = header.id;
+    }
+
+    updHeaders.push(updHeader as Headers[number]);
+  }
+
+  // TODO: check user authenticity
+  // TODO: zod check items
+  const headersReturns = await db()
+    .insert(deliveryOrderHeaders)
+    .values(updHeaders)
+    .onConflictDoUpdate({
+      target: deliveryOrderHeaders.id,
+      set: setAllValues(updHeaders),
+    })
+    .returning({ insertedId: deliveryOrderHeaders.id });
+  console.log("headers ok!", headersReturns);
+  console.log("headers", updHeaders);
 
   // ==== handling items ====
   // check if items exists
   invariant(formData.get("items"), "Missing items.");
 
   const items: Items = JSON.parse(formData.get("items") as string);
-  console.log(items);
+  // console.log(items);
 
   const updItems = [];
 
