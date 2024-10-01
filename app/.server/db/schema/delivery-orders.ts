@@ -61,6 +61,7 @@ export const deliveryOrderHeaders = pgTable("delivery_order_headers", {
     .notNull(),
   header: varchar("header", { length: 32 }).notNull(),
   value: varchar("value", { length: 32 }).notNull(),
+  position: integer("position").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).default(
     sql`CURRENT_TIMESTAMP`
   ),
