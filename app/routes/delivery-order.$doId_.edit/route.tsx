@@ -1,4 +1,4 @@
-import { CheckIcon, Cross1Icon, Cross2Icon } from "@radix-ui/react-icons";
+import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form,
@@ -9,6 +9,7 @@ import {
   useParams,
 } from "@remix-run/react";
 import { eq } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
 import invariant from "tiny-invariant";
 import { db } from "~/.server/db";
 import { companies } from "~/.server/db/schema/companies";
@@ -21,6 +22,11 @@ import { Button } from "~/components/ui/button";
 import EditItems from "./EditItems";
 import { setAllValues } from "~/.server/utils/setAllValues";
 import EditHeaders from "./EditHeaders";
+import {
+  checkObjectPermissions,
+  checkRoutePermissions,
+} from "~/.server/utils/permissions";
+import { z } from "zod";
 
 export const handle = {
   breadcrumb: () => {
@@ -114,24 +120,43 @@ export async function action({ params, request }: ActionFunctionArgs) {
   }
 
   const updHeaders: Headers = [];
+  const headerInsertSchema = createInsertSchema(deliveryOrderHeaders, {
+    id: (schema) => schema.id.positive(),
+    createdAt: z.string(),
+  });
+  const itemInsertSchema = createInsertSchema(deliveryOrderItems, {
+    id: (schema) => schema.id.positive(),
+    createdAt: z.string(),
+  });
 
   for (const header of headers) {
-    // check deliveryOrderId tampering
-    if (header.deliveryOrderId !== Number(params.doId))
-      throw new Response("Invalid doId.", { status: 403 });
+    // https://orm.drizzle.team/docs/zod
+
+    checkRoutePermissions(header.deliveryOrderId, Number(params.doId));
 
     // check createdBy tampering
     // FIXME: update when auth backend is done
+    // checkObjectPermissions(header, user)
     if (header.createdBy !== 1)
       throw new Response("Invalid user.", { status: 403 });
 
-    // FIXME: better vodoo magic casting ability
+    try {
+      headerInsertSchema.parse(header);
+    } catch (e) {
+      // FIXME: upgrade error reporting
+      if (e instanceof z.ZodError) {
+        throw new Response(e.message, { status: 400 });
+      }
+    }
+
+    // FIXME: better vodoo magic casting ability (type engineering)
     const updHeader = {
       createdBy: 1,
       // createdAt: , // no need to touch this
       deliveryOrderId: Number(params.doId), // prevent tampering
       header: header.header,
       value: header.value,
+      position: header.position,
     };
 
     if (header.id !== null) {
@@ -141,8 +166,6 @@ export async function action({ params, request }: ActionFunctionArgs) {
     updHeaders.push(updHeader as Headers[number]);
   }
 
-  // TODO: check user authenticity
-  // TODO: zod check items
   const headersReturns = await db()
     .insert(deliveryOrderHeaders)
     .values(updHeaders)
@@ -188,14 +211,21 @@ export async function action({ params, request }: ActionFunctionArgs) {
   }
 
   for (const item of items) {
-    // check deliveryOrderId tampering
-    if (item.deliveryOrderId !== Number(params.doId))
-      throw new Response("Invalid doId.", { status: 403 });
+    checkRoutePermissions(item.deliveryOrderId, Number(params.doId));
 
     // check createdBy tampering
     // FIXME: update when auth backend is done
     if (item.createdBy !== 1)
       throw new Response("Invalid user.", { status: 403 });
+
+    try {
+      itemInsertSchema.parse(item);
+    } catch (e) {
+      // FIXME: upgrade error reporting
+      if (e instanceof z.ZodError) {
+        throw new Response(e.message, { status: 400 });
+      }
+    }
 
     // NOTE: update this whenever a new row is inserted
     // we need updItem because some business logic are
@@ -220,8 +250,6 @@ export async function action({ params, request }: ActionFunctionArgs) {
     updItems.push(updItem);
   }
 
-  // TODO: check user authenticity
-  // TODO: zod check items
   const returns = await db()
     .insert(deliveryOrderItems)
     .values(updItems)
@@ -233,7 +261,6 @@ export async function action({ params, request }: ActionFunctionArgs) {
   console.log("items ok!", returns);
 
   return redirect(`/delivery-order/${params.doId}`);
-  // throw new Response("I suck", { status: 501 });
 }
 
 export default function DeliveryOrderDetail() {
