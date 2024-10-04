@@ -1,6 +1,45 @@
 # Changelog
 
 
+## v0.0.1-dev.2
+
+[compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1-dev.1...v0.0.1-dev.2)
+
+### 🚀 Enhancements
+
+- **ui:** Add new variant `success` to button (577b75e)
+- **db:** Add new column description to `deliveryOrderItems` (06f4459)
+- **route:** (wip) implement Edit view for Delivery Order (6cf75d7)
+- **db:** Add new column position (7b5e0db)
+- **route:** (wip) implement items delete, cancel for `deliveryOrder.$doId_.edit` (35c7e3d)
+- **route:** Implement functionality for EditHeaders (f6d951a)
+- **db:** Add new column `position` to `deliveryOrderHeaders` (7a194af)
+- **db:** New functions for db-related checks (32757c5)
+- **route:** Implement input sanitization check (e8d5086)
+
+### 🩹 Fixes
+
+- **db:** Add `notNull` to `deliveryOrderId` on `deliveryOrderHeaders` (99dc944)
+
+### 💅 Refactors
+
+- **ui:** Add new color `success` (d3d3ad7)
+- **routes:** Pull headers code out from `deliveryOrder.$doId_.edit` (9979632)
+- **route:** Improve EditHeaders to stop redundant update (8addce6)
+
+### 📦 Build
+
+- Add new dependency `scule` (e1b4dd7)
+- Add new dependency `drizzle-zod` (7eddd04)
+
+### 🏡 Chore
+
+- Add vscode `settings.json` (bf8e122)
+
+### ❤️ Contributors
+
+- Anthocodes99 ([@anthocodes99](http://github.com/anthocodes99))
+
 ## v0.0.1-dev.1
 
 
