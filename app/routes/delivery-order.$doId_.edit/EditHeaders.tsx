@@ -13,9 +13,14 @@ export default function EditHeaders({
 }) {
   const [headers, setHeaders] = useState(data.headers);
 
-  const handleChange = (id: number, header: string, value: string) => {
+  const handleChange = (
+    id: number,
+    field: keyof LoaderData["headers"][number],
+    value: string
+  ) => {
     // const currHeader = headers.find((header) => header.id === id);
-    const updHeader = { id, createdAt: null, createdBy: 1, header, value };
+    const currHeader = headers.find((header) => header.id === id);
+    const updHeader = { ...currHeader, [field]: value };
     const newHeaders = [
       ...headers.filter((header) => header.id !== id),
       updHeader,
@@ -50,9 +55,8 @@ export default function EditHeaders({
             <Input
               type="text"
               defaultValue={header.header}
-              // TODO: refactor unncessary update
               onChange={(e) =>
-                handleChange(header.id, e.target.value, header.value)
+                handleChange(header.id, "header", e.target.value)
               }
             />
           </div>
@@ -61,10 +65,7 @@ export default function EditHeaders({
             <Input
               type="text"
               defaultValue={header.value}
-              // TODO: refactor unncessary update
-              onChange={(e) =>
-                handleChange(header.id, header.header, e.target.value)
-              }
+              onChange={(e) => handleChange(header.id, "value", e.target.value)}
             />
           </div>
         </React.Fragment>
