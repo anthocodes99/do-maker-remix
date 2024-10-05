@@ -27,7 +27,7 @@ export const deliveryOrders = pgTable("delivery_orders", {
     .notNull(),
   isPosted: boolean("is_posted").default(false),
   postedAt: timestamp("posted_at"),
-  postedBy: integer("created_by").references(() => users.id),
+  postedBy: integer("posted_by").references(() => users.id),
   createdAt: timestamp("created_at", { withTimezone: true }).default(
     sql`CURRENT_TIMESTAMP`
   ),
