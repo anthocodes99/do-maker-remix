@@ -95,6 +95,41 @@ export async function action({ params, request }: ActionFunctionArgs) {
   invariant(params.doId, "Missing Parameter doId");
   // console.log(params); // doId: 1
 
+  // ==== handling date ====
+  const date: FormDataEntryValue | null = formData.get("header_date");
+  invariant(date, "Missing date.");
+  const dbDeliveryOrder = await db()
+    .select()
+    .from(deliveryOrders)
+    .where(eq(deliveryOrders.id, Number(params.doId)));
+
+  // FIXME: update when auth backend is done
+  // checkObjectPermissions(header, user)
+  if (dbDeliveryOrder[0].createdBy !== 1)
+    throw new Response("Invalid user.", { status: 403 });
+
+  // const doInsertSchema = createInsertSchema(deliveryOrders, {
+  //   id: (schema) => schema.id.positive(),
+  //   date: z.string(),
+  // });
+  const updDeliveryOrder = {
+    id: dbDeliveryOrder[0].id,
+    date: formData.get("header_date") as string,
+    companyId: dbDeliveryOrder[0].companyId,
+    createdBy: dbDeliveryOrder[0].createdBy,
+  };
+
+  console.log(updDeliveryOrder);
+  const doReturn = await db()
+    .insert(deliveryOrders)
+    .values([updDeliveryOrder])
+    .onConflictDoUpdate({
+      target: deliveryOrders.id,
+      set: setAllValues([updDeliveryOrder]),
+    })
+    .returning({ insertedId: deliveryOrders.id });
+  console.log("invoice ok!", doReturn);
+
   // ==== handling headers ====
   invariant(formData.get("headers"), "Missing headers.");
 
