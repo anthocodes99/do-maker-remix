@@ -18,7 +18,6 @@ import {
   deliveryOrderItems,
   deliveryOrders,
 } from "~/.server/db/schema/delivery-orders";
-import { Button } from "~/components/ui/button";
 import EditItems from "./EditItems";
 import { setAllValues } from "~/.server/utils/setAllValues";
 import EditHeaders from "./EditHeaders";
@@ -27,6 +26,8 @@ import {
   checkRoutePermissions,
 } from "~/.server/utils/permissions";
 import { z } from "zod";
+import EditCompany from "./EditCompany";
+import EditButtons from "./EditButtons";
 
 export const handle = {
   breadcrumb: () => {
@@ -300,38 +301,14 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
 export default function DeliveryOrderDetail() {
   const data = useLoaderData<typeof loader>();
-  const navigate = useNavigate();
   return (
     <>
       <div className="max-w-4xl mx-auto">
         <Form method="post">
           <div className="mt-24">
-            <div className="flex gap-2 justify-end">
-              {/* BUTTONS SECTION */}
-              <Button variant="success" type="submit">
-                <div className="flex items-center">
-                  <CheckIcon /> <span className="pl-4 font-bold">Post</span>
-                </div>
-              </Button>
-              <Button
-                variant="destructive"
-                type="button"
-                onClick={() => navigate(-1)}
-              >
-                <div className="flex items-center">
-                  <Cross1Icon /> <span className="pl-4 font-bold">Cancel</span>
-                </div>
-              </Button>
-            </div>
+            <EditButtons />
             <div className="flex justify-between gap-16 mt-4">
-              {/* COMPANY SECTION */}
-              <div>
-                <h1 className="text-2xl font-bold">{data.company.name}</h1>
-                <div className="mt-2">
-                  <p>{data.company.addressLineOne}</p>
-                  <p>{data.company.addressLineTwo}</p>
-                </div>
-              </div>
+              <EditCompany company={data.company} />
               <EditHeaders data={data} />
             </div>
             <h2 className="text-xl mt-4">Items</h2>
