@@ -27,3 +27,5 @@ export const users = pgTable(
     nameIndex: index("users_username_idx").on(users.username),
   })
 );
+
+export type User = typeof users.$inferSelect;
