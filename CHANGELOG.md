@@ -1,6 +1,44 @@
 # Changelog
 
 
+## v0.0.1-dev.3
+
+[compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1-dev.2...v0.0.1-dev.3)
+
+### 🚀 Enhancements
+
+- **route:** Implement date edit for `DeliveryOrderEdit` (5793686)
+- **auth:** (wip) basic implementation for auth (6096607)
+- **auth:** (wip) basic implementation of login page (b7dd821)
+- **auth:** Implement logout (7eeb5dd)
+- **route:** Improve navbar and add user session and logout (555a01a)
+
+### 🩹 Fixes
+
+- **db:** Wrong column name for `postedBy` on table `deliveryOrders` (72afdb2)
+- **auth:** (major) remove password hash from being sent to client (e421c98)
+- **build:** Typo in `cl:dev` (da4fdef)
+
+### 💅 Refactors
+
+- **route:** Pulled out some code into it's own components (1f36994)
+- **db:** (temp) enable logs (faa5060)
+- **db:** Export type User (1ca2486)
+- Remove unused imports and test console logs (df43b4d)
+
+### 📦 Build
+
+- Add new command for dev changelog (823f14b)
+- Add new dependencies `remix-auth` and `remix-auth-form` (77c832c)
+
+### 🏡 Chore
+
+- Add /db/migrations to gitignore (d91eb9f)
+
+### ❤️ Contributors
+
+- Anthocodes99 ([@anthocodes99](http://github.com/anthocodes99))
+
 ## v0.0.1-dev.2
 
 [compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1-dev.1...v0.0.1-dev.2)
