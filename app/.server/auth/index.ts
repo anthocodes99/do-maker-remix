@@ -9,7 +9,7 @@ import { encrypt } from "./encrypt";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-type User = typeof users.$inferSelect;
+type User = Omit<typeof users.$inferSelect, "password">;
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -33,7 +33,13 @@ const login = async (username: string, password: string) => {
     throw new Error("Invalid username or password.");
   }
 
-  return user;
+  // === important! ===
+  // remove password field from being sent down
+  return {
+    id: user.id,
+    username: user.username,
+    createdAt: user.createdAt,
+  };
 };
 // Tell the Authenticator to use the form strategy
 authenticator.use(
