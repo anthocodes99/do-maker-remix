@@ -1,11 +1,9 @@
-import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form,
   Link,
   redirect,
   useLoaderData,
-  useNavigate,
   useParams,
 } from "@remix-run/react";
 import { eq } from "drizzle-orm";

@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, redirect, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth";
 import Navbar from "~/components/Navbar";
 
