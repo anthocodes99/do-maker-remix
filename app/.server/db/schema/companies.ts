@@ -31,7 +31,7 @@ export const companies = pgTable(
     createdAt: timestamp("created_at")
       .notNull()
       .default(sql`CURRENT_TIMESTAMP`),
-    createdby: integer("created_by").references(() => users.id),
+    createdBy: integer("created_by").references(() => users.id),
   },
   (company) => ({
     nameIndex: index("companies_name_idx").on(company.name),
