@@ -1,7 +1,7 @@
 import { Input } from "~/components/ui/input";
 import { type loader } from "./route";
 import { SerializeFrom } from "@remix-run/node";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "~/components/ui/button";
@@ -53,6 +53,12 @@ export default function EditItems(props: { items: SerializeFrom<Items> }) {
     const updItems = items.filter((item) => item.position !== pos);
     setItems(updItems);
   };
+
+  useEffect(() => {
+    if (items.length === 0) {
+      addItem();
+    }
+  });
   return (
     <>
       <ul className="mt-8">
