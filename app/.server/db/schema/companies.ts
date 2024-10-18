@@ -37,3 +37,5 @@ export const companies = pgTable(
     nameIndex: index("companies_name_idx").on(company.name),
   })
 );
+
+export type Company = typeof companies.$inferSelect;

@@ -67,3 +67,9 @@ export const deliveryOrderHeaders = pgTable("delivery_order_headers", {
   ),
   createdBy: integer("created_by").references(() => users.id),
 });
+
+export type DeliveryOrder = typeof deliveryOrders.$inferSelect;
+
+export type DeliveryOrderHeader = typeof deliveryOrderHeaders.$inferSelect;
+
+export type DeliveryOrderItem = typeof deliveryOrderItems.$inferSelect;
