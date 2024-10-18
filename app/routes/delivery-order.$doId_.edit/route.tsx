@@ -26,6 +26,7 @@ import {
 import { z } from "zod";
 import EditCompany from "./EditCompany";
 import EditButtons from "./EditButtons";
+import { authenticator } from "~/.server/auth";
 
 export const handle = {
   breadcrumb: () => {
@@ -86,6 +87,10 @@ export async function action({ params, request }: ActionFunctionArgs) {
   type Items = LoaderData["items"];
   type Headers = LoaderData["headers"];
   // FIXME: id can be null in this case
+
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/login",
+  });
 
   const formData = await request.formData();
   console.log(formData); // FormData {junks:value}
