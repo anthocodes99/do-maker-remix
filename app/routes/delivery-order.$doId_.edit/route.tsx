@@ -307,7 +307,11 @@ export default function DeliveryOrderDetail() {
             <EditButtons />
             <div className="flex justify-between gap-16 mt-4">
               <EditCompany company={data.company} />
-              <EditHeaders data={data} />
+              <EditHeaders
+                invNumber={data.deliveryOrder.id}
+                date={data.deliveryOrder.date}
+                headers={data.headers}
+              />
             </div>
             <h2 className="text-xl mt-4">Items</h2>
             <EditItems items={data.items} />

@@ -6,12 +6,16 @@ import { SerializeFrom } from "@remix-run/node";
 
 type LoaderData = Awaited<ReturnType<typeof loader>>;
 
-export default function EditHeaders({
-  data,
-}: {
-  data: SerializeFrom<LoaderData>;
+export default function EditHeaders(props: {
+  invNumber: number | null;
+  date: string | null;
+  headers: SerializeFrom<LoaderData["headers"]>;
 }) {
-  const [headers, setHeaders] = useState(data.headers);
+  // there's two types of headers
+  // deliveryOrder headers (inv no and date)
+  // and custom headers (key-value pairs)
+  // { invNumber: int, date: string, headers}
+  const [headers, setHeaders] = useState(props.headers);
 
   const handleChange = (
     id: number,
@@ -34,22 +38,20 @@ export default function EditHeaders({
       <div>No. </div>
       <div>
         :{" "}
-        {data.deliveryOrder.id.toLocaleString("en-US", {
-          minimumIntegerDigits: 5,
-          useGrouping: false,
-        })}
+        {props.invNumber !== null
+          ? props.invNumber.toLocaleString("en-US", {
+              minimumIntegerDigits: 5,
+              useGrouping: false,
+            })
+          : "NEW"}
       </div>
       {/* DATE */}
       <div>Date</div>
       <div className="flex gap-2">
         <span>:</span>
-        <Input
-          name={`header_date`}
-          type="date"
-          defaultValue={data.deliveryOrder.date}
-        />
+        <Input name={`header_date`} type="date" defaultValue={props.date} />
       </div>
-      {data.headers.map((header) => (
+      {headers.map((header) => (
         <React.Fragment key={header.id}>
           <div className="pr-8">
             <Input
