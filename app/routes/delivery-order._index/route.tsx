@@ -7,6 +7,8 @@ import { deliveryOrders } from "~/.server/db/schema/delivery-orders";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { users } from "~/.server/db/schema/users";
+import { Button } from "~/components/ui/button";
+import { PlusIcon } from "@radix-ui/react-icons";
 
 export const handle = {
   breadcrumb: () => (
@@ -42,6 +44,13 @@ export default function DeliveryOrderList() {
   return (
     <>
       <div className="container mx-auto py-10">
+        <div className="flex justify-end mb-4">
+          <Link to="/delivery-order/new">
+            <Button>
+              <PlusIcon /> <span className="pl-2">New Invoice</span>
+            </Button>
+          </Link>
+        </div>
         <DataTable columns={columns} data={data} />
       </div>
     </>
