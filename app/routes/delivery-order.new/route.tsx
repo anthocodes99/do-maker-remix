@@ -32,7 +32,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const formData = await request.formData();
 
-  return createOrEditDeliveryOrder(formData, null, user, true);
+  return await createOrEditDeliveryOrder(formData, null, user, true);
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

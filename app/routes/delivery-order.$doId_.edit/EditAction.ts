@@ -139,7 +139,8 @@ async function handleHeaders(headers: Headers, doId: number, user: AuthUser) {
 async function handleItems(items: Items, doId: number, user: AuthUser) {
   const updItems = [];
   const itemInsertSchema = createInsertSchema(deliveryOrderItems, {
-    id: (schema) => schema.id.positive(),
+    id: (schema) => schema.id.positive().nullable(),
+    deliveryOrderId: z.number().nullable(),
     createdAt: z.string(),
   });
 
@@ -200,7 +201,7 @@ async function handleItems(items: Items, doId: number, user: AuthUser) {
       createdBy: item.createdBy === null ? 1 : item.createdBy,
       // FIXME: i could be the source of a auth bypass
       deliveryOrderId:
-        item.deliveryOrderId === null ? doId : item.deliveryOrderId,
+        item.deliveryOrderId === null ? doId : Number(item.deliveryOrderId),
       quantity: item.quantity,
       uom: item.uom,
       description: item.description,
@@ -290,6 +291,8 @@ export async function createOrEditDeliveryOrder(
 
   /// === items ===
   console.log("items!");
+  // FIXME: the TYPES ARE WRONG
+  // JSON.parse will turn it into A STRING!
   const items: Items = JSON.parse(formData.get("items") as string);
   invariant(items, "Missing items.");
   await handleItems(items, doId, user);
