@@ -14,7 +14,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "cl:dev": "pnpm dlx changelogen@latest --release --prerelease dev"
+    "cl:dev": "pnpm dlx changelogen@latest --release --prerelease dev",
+    "cl:patch": "pnpm dlx changelogen@latest --release --patch"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.2",
