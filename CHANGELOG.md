@@ -1,6 +1,38 @@
 # Changelog
 
 
+## v0.0.1-dev.4
+
+[compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1-dev.3...v0.0.1-dev.4)
+
+### 🚀 Enhancements
+
+- **route:** `delivery-order` `edit` route now does auth check (f714f8e)
+- **ui:** Add new components (df4c0d2)
+- **route:** `EditItems` will create 1 empty input if Delivery Order has no items (48efd4f)
+- **route:** (wip) new route `delivery-order/new` (1b00b91)
+- **route:** `do_new` now able to create delivery orders (ae7ff93)
+
+### 🩹 Fixes
+
+- **db:** Typo on table `companies` `createdby` (0c5d641)
+- **db:** Adds `notNull()` to `deliveryOrder.createdBy` and removes `unique()` from `deliveryOrderItems` (53fb653)
+- **route:** Application error due to strict zod checks (3c34e41)
+
+### 💅 Refactors
+
+- Decouple EditHeaders (cc028a2)
+- **db:** Export db types (3d7b1c1)
+- **route:** Pulled out `do_edit`'s `action` code (797a838)
+
+### 📦 Build
+
+- Add new dependencies (91a2803)
+
+### ❤️ Contributors
+
+- Anthocodes99 ([@anthocodes99](http://github.com/anthocodes99))
+
 ## v0.0.1-dev.3
 
 [compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1-dev.2...v0.0.1-dev.3)
