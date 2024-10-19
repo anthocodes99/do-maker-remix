@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input } from "~/components/ui/input";
 
-import { type loader } from "./route";
+import { type loader } from "../../routes/delivery-order.$doId_.edit/route";
 import { SerializeFrom } from "@remix-run/node";
 
 type LoaderData = Awaited<ReturnType<typeof loader>>;

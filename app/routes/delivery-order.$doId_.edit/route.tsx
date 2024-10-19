@@ -16,16 +16,16 @@ import {
   deliveryOrderItems,
   deliveryOrders,
 } from "~/.server/db/schema/delivery-orders";
-import EditItems from "./EditItems";
+import CreateUpdateItems from "~/components/delivery-order/CreateUpdateItems";
 import { setAllValues } from "~/.server/utils/setAllValues";
-import EditHeaders from "./EditHeaders";
+import CreateUpdateHeaders from "../../components/delivery-order/CreateUpdateHeaders";
 import {
   checkObjectPermissions,
   checkRoutePermissions,
 } from "~/.server/utils/permissions";
 import { z } from "zod";
 import EditCompany from "./EditCompany";
-import EditButtons from "./EditButtons";
+import CreateUpdateButtons from "../../components/delivery-order/CreateUpdateButtons";
 import { authenticator } from "~/.server/auth";
 import { createOrEditDeliveryOrder } from "./EditAction";
 
@@ -103,17 +103,17 @@ export default function DeliveryOrderDetail() {
       <div className="max-w-4xl mx-auto">
         <Form method="post">
           <div className="mt-24">
-            <EditButtons />
+            <CreateUpdateButtons />
             <div className="flex justify-between gap-16 mt-4">
               <EditCompany company={data.company} />
-              <EditHeaders
+              <CreateUpdateHeaders
                 invNumber={data.deliveryOrder.id}
                 date={data.deliveryOrder.date}
                 headers={data.headers}
               />
             </div>
             <h2 className="text-xl mt-4">Items</h2>
-            <EditItems items={data.items} />
+            <CreateUpdateItems items={data.items} />
           </div>
         </Form>
       </div>

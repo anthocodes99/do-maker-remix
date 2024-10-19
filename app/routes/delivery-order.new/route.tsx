@@ -1,8 +1,8 @@
 import { Form, Link, useLoaderData } from "@remix-run/react";
-import EditButtons from "../delivery-order.$doId_.edit/EditButtons";
+import CreateUpdateButtons from "../../components/delivery-order/CreateUpdateButtons";
 import NewCompany from "./NewCompany";
-import EditHeaders from "../delivery-order.$doId_.edit/EditHeaders";
-import EditItems from "../delivery-order.$doId_.edit/EditItems";
+import CreateUpdateHeaders from "../../components/delivery-order/CreateUpdateHeaders";
+import CreateUpdateItems from "~/components/delivery-order/CreateUpdateItems";
 import { db } from "~/.server/db";
 import { authenticator } from "~/.server/auth";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
@@ -59,14 +59,14 @@ export default function DeliveryOrderDetail() {
       <div className="max-w-4xl mx-auto">
         <Form method="post">
           <div className="mt-24">
-            <EditButtons />
+            <CreateUpdateButtons />
             <div className="flex justify-between gap-16 mt-4">
               {/* <EditCompany company={data.company} /> */}
               <NewCompany companies={data.companies} />
-              <EditHeaders invNumber={null} date={null} headers={[]} />
+              <CreateUpdateHeaders invNumber={null} date={null} headers={[]} />
             </div>
             <h2 className="text-xl mt-4">Items</h2>
-            <EditItems items={[]} />
+            <CreateUpdateItems items={[]} />
           </div>
         </Form>
       </div>
