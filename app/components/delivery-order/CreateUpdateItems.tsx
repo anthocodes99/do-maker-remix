@@ -1,5 +1,5 @@
 import { Input } from "~/components/ui/input";
-import { type loader } from "./route";
+import { type loader } from "~/routes/delivery-order.$doId_.edit/route";
 import { SerializeFrom } from "@remix-run/node";
 import { useEffect, useState } from "react";
 
@@ -17,13 +17,16 @@ export default function EditItems(props: { items: SerializeFrom<Items> }) {
   const params = useParams();
   const [items, setItems] = useState<SerializeFrom<Items>>([...props.items]);
   const handleChange = (
-    id: number,
+    position: number,
     field: keyof Item,
     value: string | number
   ) => {
-    const currItem = items.find((item) => item.id === id);
+    const currItem = items.find((item) => item.position === position);
     const updItem = { ...currItem, [field]: value };
-    const newItems = [...items.filter((item) => item.id !== id), updItem];
+    const newItems = [
+      ...items.filter((item) => item.position !== position),
+      updItem,
+    ].sort((a, b) => a.position! - b.position!);
     // updItem ulimately refers from props.items, which *always* have data
     // TypeScript can't seem to infer, so I gave it a lil help
     setItems(newItems as SerializeFrom<Items>);
@@ -70,7 +73,9 @@ export default function EditItems(props: { items: SerializeFrom<Items> }) {
                 // name={`items_name_${item.id}`}
                 type="text"
                 defaultValue={item.name}
-                onChange={(e) => handleChange(item.id, "name", e.target.value)}
+                onChange={(e) =>
+                  handleChange(item.position, "name", e.target.value)
+                }
               />
               <div className="flex gap-1">
                 <Input
@@ -78,14 +83,16 @@ export default function EditItems(props: { items: SerializeFrom<Items> }) {
                   type="number"
                   defaultValue={item.quantity}
                   onChange={(e) =>
-                    handleChange(item.id, "quantity", e.target.value)
+                    handleChange(item.position, "quantity", e.target.value)
                   }
                 />
                 <Input
                   // name={`items_uom_${item.id}`}
                   type="text"
                   defaultValue={item.uom}
-                  onChange={(e) => handleChange(item.id, "uom", e.target.value)}
+                  onChange={(e) =>
+                    handleChange(item.position, "uom", e.target.value)
+                  }
                 />
               </div>
               <Button
