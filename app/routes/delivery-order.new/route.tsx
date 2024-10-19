@@ -5,9 +5,10 @@ import EditHeaders from "../delivery-order.$doId_.edit/EditHeaders";
 import EditItems from "../delivery-order.$doId_.edit/EditItems";
 import { db } from "~/.server/db";
 import { authenticator } from "~/.server/auth";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { companies } from "~/.server/db/schema/companies";
 import { eq } from "drizzle-orm";
+import { createOrEditDeliveryOrder } from "../delivery-order.$doId_.edit/EditAction";
 
 export const handle = {
   breadcrumb: () => {
@@ -22,6 +23,16 @@ export const handle = {
       </>
     );
   },
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/login",
+  });
+
+  const formData = await request.formData();
+
+  return createOrEditDeliveryOrder(formData, null, user, true);
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

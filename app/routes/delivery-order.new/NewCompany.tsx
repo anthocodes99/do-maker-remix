@@ -29,7 +29,7 @@ export default function ComboboxDemo({
     <div className="block">
       <Combobox inputValue={selectedCompany} onInputChange={handleSelectChange}>
         <FieldGroup className="p-0">
-          <ComboboxInput className="text-2xl font-bold" />
+          <ComboboxInput name="company_name" className="text-2xl font-bold" />
           <Button variant="ghost" size="icon" className="mr-1 size-6 p-1">
             <ChevronsUpDown aria-hidden="true" className="size-4 opacity-50" />
           </Button>
