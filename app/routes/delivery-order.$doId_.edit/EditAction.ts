@@ -295,7 +295,12 @@ export async function createOrEditDeliveryOrder(
   // JSON.parse will turn it into A STRING!
   const items: Items = JSON.parse(formData.get("items") as string);
   invariant(items, "Missing items.");
-  await handleItems(items, doId, user);
+
+  // when submitting a form with an empty Add Item field,
+  // a `new` key will be added. We filter those out.
+  const updItems = items.filter((item) => !item.new);
+
+  await handleItems(updItems, doId, user);
 
   return redirect(`/delivery-order/${doId}`);
 }

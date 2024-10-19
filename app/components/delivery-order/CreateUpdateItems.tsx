@@ -7,15 +7,22 @@ import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "~/components/ui/button";
 import { useParams } from "@remix-run/react";
 
+import { type DeliveryOrderItem } from "~/.server/db/schema/delivery-orders";
+
 // type safe (db changes will reflect)
-type LoaderData = Awaited<ReturnType<typeof loader>>;
-type Items = LoaderData["items"];
-type Item = Items extends Array<infer T> ? T : never;
+// type LoaderData = Awaited<ReturnType<typeof loader>>;
+// type Items = LoaderData["items"];
+// type Item = Items extends Array<infer T> ? T : never;
+
+type Item = Omit<DeliveryOrderItem, "id"> & {
+  id: number | null;
+  new: boolean;
+};
 
 // https://stackoverflow.com/questions/78712510/
-export default function EditItems(props: { items: SerializeFrom<Items> }) {
+export default function EditItems(props: { items: SerializeFrom<Item[]> }) {
   const params = useParams();
-  const [items, setItems] = useState<SerializeFrom<Items>>([...props.items]);
+  const [items, setItems] = useState([...props.items]);
   const handleChange = (
     position: number,
     field: keyof Item,
@@ -26,10 +33,18 @@ export default function EditItems(props: { items: SerializeFrom<Items> }) {
     const newItems = [
       ...items.filter((item) => item.position !== position),
       updItem,
-    ].sort((a, b) => a.position! - b.position!);
+    ]
+      .sort((a, b) => a.position! - b.position!)
+      .map((item) => {
+        if (item.new) {
+          const { new: _, ...rest } = item;
+          return rest;
+        }
+        return item;
+      });
     // updItem ulimately refers from props.items, which *always* have data
     // TypeScript can't seem to infer, so I gave it a lil help
-    setItems(newItems as SerializeFrom<Items>);
+    setItems(newItems as SerializeFrom<Item[]>);
   };
 
   // wip - does not work due to id needing to be null
@@ -47,6 +62,7 @@ export default function EditItems(props: { items: SerializeFrom<Items> }) {
       position: items.length,
       uom: "EA",
       description: null,
+      new: true,
     };
     const updItems = [...items, newItem];
     setItems(updItems);
