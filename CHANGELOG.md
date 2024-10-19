@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.0.1
+
+[compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1-dev.4...v0.0.1)
+
+### 🩹 Fixes
+
+- **route:** Unable to add more than 1 items at a time (59e947d)
+- **route:** Prevent `do_edit` and `do_new` from submitting empty items (ea02c04)
+
+### 💅 Refactors
+
+- **route:** Move shared components to a `/components` directory (82dbb2c)
+
+### 📦 Build
+
+- Add new script (1282aa2)
+
+### 🏡 Chore
+
+- README (2ec8e89)
+
+### ❤️ Contributors
+
+- Anthocodes99 ([@anthocodes99](http://github.com/anthocodes99))
+
 ## v0.0.1-dev.4
 
 [compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1-dev.3...v0.0.1-dev.4)
