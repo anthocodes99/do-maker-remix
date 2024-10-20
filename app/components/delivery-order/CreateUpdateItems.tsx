@@ -1,7 +1,7 @@
 import { Input } from "~/components/ui/input";
 import { type loader } from "~/routes/delivery-order.$doId_.edit/route";
 import { SerializeFrom } from "@remix-run/node";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "~/components/ui/button";
@@ -23,6 +23,9 @@ type Item = Omit<DeliveryOrderItem, "id"> & {
 export default function EditItems(props: { items: SerializeFrom<Item[]> }) {
   const params = useParams();
   const [items, setItems] = useState([...props.items]);
+
+  const inputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
+
   const handleChange = (
     position: number,
     field: keyof Item,
@@ -48,7 +51,7 @@ export default function EditItems(props: { items: SerializeFrom<Item[]> }) {
   };
 
   // wip - does not work due to id needing to be null
-  const addItem = () => {
+  const addItem = (focus: boolean = true) => {
     // TODO: generate default value based on model?
     const newItem = {
       // FIXME: (ts) id needs to be number | null
@@ -66,6 +69,11 @@ export default function EditItems(props: { items: SerializeFrom<Item[]> }) {
     };
     const updItems = [...items, newItem];
     setItems(updItems);
+
+    // focus on the newly created item after it has been rendered
+    setTimeout(() => {
+      inputRefs.current[items.length]?.focus();
+    }, 0); // Short delay to wait for render
   };
 
   const deleteItem = (pos: number) => {
@@ -75,14 +83,14 @@ export default function EditItems(props: { items: SerializeFrom<Item[]> }) {
 
   useEffect(() => {
     if (items.length === 0) {
-      addItem();
+      addItem(false);
     }
   });
   return (
     <>
-      <ul className="mt-8">
+      <ul id="items" className="mt-8">
         <input name="items" type="hidden" value={JSON.stringify(items)} />
-        {items.map((item) => (
+        {items.map((item, index) => (
           <li key={item.position} className="mt-4">
             <div className="flex justify-between gap-1">
               <Input
@@ -92,6 +100,7 @@ export default function EditItems(props: { items: SerializeFrom<Item[]> }) {
                 onChange={(e) =>
                   handleChange(item.position, "name", e.target.value)
                 }
+                ref={(el) => (inputRefs.current[index] = el)}
               />
               <div className="flex gap-1">
                 <Input
