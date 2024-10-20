@@ -62,23 +62,29 @@ export default function Login() {
   const loader = useLoaderData<typeof loader>();
   console.log({ loader });
   return (
-    <div className="max-w-md mx-auto mt-24">
+    <div className="max-w-md mx-auto mt-72">
       <Form method="post">
-        <p className="mb-4 text-red-500">
+        <h1 className="text-3xl font-bold text-center">Delivery Order Maker</h1>
+        <h2 className="text-xl font-bold text-center mt-8">
+          Sign in to your account
+        </h2>
+        <p className="mt-4 mb-2 text-red-500">
           {loader.error?.message ? loader.error.message : ""}
         </p>
         <Input type="text" name="username" placeholder="Username" />
         {/* {actionData?.errors.username ? (
           <em>{actionData?.errors.username}</em>
         ) : null} */}
-        <div className="mt-4">
+        <div className="mt-8">
           <Input type="password" name="password" placeholder="Password" />
           {/* {actionData?.errors.password ? (
             <em>{actionData?.errors.password}</em>
           ) : null} */}
         </div>
         <div className="flex mt-8 justify-center">
-          <Button variant="default">Login</Button>
+          <Button variant="default" className="w-full">
+            Sign In
+          </Button>
         </div>
       </Form>
     </div>
