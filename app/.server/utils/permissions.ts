@@ -5,7 +5,7 @@ type DBObject = {
   [key: string]: unknown;
 };
 
-type User = typeof users.$inferSelect;
+type User = Omit<typeof users.$inferSelect, "password">;
 
 export function checkObjectPermissions(obj: DBObject, user: User) {
   if (obj.createdBy !== user.id) {

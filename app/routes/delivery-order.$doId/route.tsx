@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useParams, Link } from "@remix-run/react";
+import { useLoaderData, useParams, Link, Form } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import invariant from "tiny-invariant";
 import { db } from "~/.server/db";
@@ -10,7 +10,7 @@ import {
   deliveryOrders,
 } from "~/.server/db/schema/delivery-orders";
 
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import React from "react";
 import { DataTable } from "../delivery-order._index/data-table";
@@ -85,12 +85,21 @@ export default function DeliveryOrderDetail() {
     <>
       <div className="max-w-4xl mx-auto">
         <div className="mt-24">
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-4">
             <Button asChild variant="default" className="">
               <Link to={`/delivery-order/${params.doId}/edit`} className="">
                 <Pencil /> <span className="pl-4 font-bold">Edit</span>
               </Link>
             </Button>
+            <Form
+              method="post"
+              action={`/delivery-order/${params.doId}/delete`}
+            >
+              <Button variant="destructive" type="submit">
+                <Trash2 />
+                <span className="pl-4 font-bold">Delete</span>
+              </Button>
+            </Form>
           </div>
           <div className="flex justify-between gap-16 mt-4">
             <div>
