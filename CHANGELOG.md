@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v0.0.2
+
+[compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1...v0.0.2)
+
+### 🚀 Enhancements
+
+- **route:** Auto-focus on newly added item input (281a34a)
+- **route:** Improve UI for login page (31baf0a)
+- **route:** Implement delete functionality for delivery orders (660cb14)
+
+### 📦 Build
+
+- Add cl scripts (0571932)
+
+### ❤️ Contributors
+
+- Anthocodes99 ([@anthocodes99](http://github.com/anthocodes99))
+
 ## v0.0.1
 
 [compare changes](https://gh-antho/anthocodes99/do-maker-remix/compare/v0.0.1-dev.4...v0.0.1)
